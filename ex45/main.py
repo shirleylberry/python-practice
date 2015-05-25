@@ -22,7 +22,8 @@ from death_scene import Death
 # user can find a map if they look for it.  if user has the map in inventory, display ascii map
 
 class Player(object):
-	def __init__(self, inventory):
+	def __init__(self, name, inventory):
+		self.name = name
 		self.inventory = inventory
 
 
@@ -71,22 +72,26 @@ class Map(object):
 
 
 class Engine(object):
-	def __init__(self, game_map):
+	def __init__(self, game_map, player):
 		self.game_map = game_map
+		self.player = player
 
 	def play(self):
 		current_scene = self.game_map.get_start_scene()
 		end_scene = self.game_map.get_end_scene()
 
 		while current_scene != end_scene:
-			current_scene.enter()
+			current_scene.enter(self.player)
 			next_scene_name = current_scene.get_next_room()
 			current_scene = self.game_map.get_next_scene(next_scene_name)
 		current_scene.enter()
 
 
 my_map = Map("hallway", "treasure_room")
-gm_engine = Engine(my_map)
+name = input("Enter your name.")
+inventory = []
+player = Player(name, inventory)
+gm_engine = Engine(my_map, player)
 gm_engine.play()
 
 
