@@ -24,8 +24,8 @@ class Barracks(object):
 			print "Your torch casts light on a bunk where two soldiers sleep."
 			print "As the glow from the torch hits them, they slowly start to wake up."			
 
-	def get_next_room(self, player):
-		if not "torch" in self.player.inventory:
+	def get_next_room(self):
+		if "torch" not in self.player.inventory:
 			print "You realize you can't see jack shit in the next room."
 			print "You retreat back into the dining room."
 			return "diningroom"
@@ -59,7 +59,7 @@ class Barracks(object):
 			print "You continue on into the next room."
 			return "treasure_room"
 		else:
-			print "Well... you have no weapon.  And then do..."
+			print "Well... you have no weapon.  And they do..."
 			print "You're kind of fucked."
 			return "death_scene"
 

@@ -38,6 +38,10 @@ class DiningRoom(object):
 				print "You head across the room to the door."
 				next_choice = True
 				return "barracks"
+			elif "hallway" in choice:
+				print "You head back to the hallway you just came from."
+				next_choice = True
+				return "hallway"
 			else:
 				print "I didn't understand that."
 				return "diningroom"

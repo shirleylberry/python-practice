@@ -6,6 +6,8 @@ class Death(object):
 		self.player = player
 
 	def enter(self):
-		pass
+		print "You are carrying " + str(self.player.inventory)
+		
 	def get_next_room(self):
-		pass
+		print "You're super duper dead."
+		exit(1)

@@ -16,6 +16,7 @@ class TreasureRoom(object):
 
 	def enter(self):
 		print "You are carrying " + str(self.player.inventory)
-		pass
+		
 	def get_next_room(self):
-		pass
+		if "key" in self.player.inventory:
+			print "Congratulations, you won!"

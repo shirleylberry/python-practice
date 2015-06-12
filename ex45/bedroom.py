@@ -19,6 +19,10 @@ class Bedroom(object):
 
 	def enter(self):
 		print "You are carrying " + str(self.player.inventory)
+		if "key" in self.player.inventory:
+			print "You already have the key from this room."
+			self.get_next_room()
+
 		if "torch" in self.player.inventory:
 			print "The torch you're carrying illuminates an elaborate bedroom, fit for a king."
 			print "There are a few chests of drawers around the room, and some tables."
@@ -33,13 +37,13 @@ class Bedroom(object):
 			return "hallway"
 
 		next_choice = False
-		if "key" in inventory:
+		if "key" in self.player.inventory:
 			print "You already found the key, so you head to the hallway."
 			return "hallway"
 		while next_choice != True:
 			print "What do you want to do next?"
 			choice = raw_input('>')
-			if "search" in choice:
+			if "search" or "key" in choice:
 				print "You rifle through the drawers and chests and come up empty handed."
 				print "Finally in a fit of rage you throw the pillows off the bed onto the floor."
 				print "A key hidden under the pillows is revealed."

@@ -41,7 +41,7 @@ class Map(object):
 			"diningroom" : DiningRoom(player),
 			"bedroom" : Bedroom(player),
 			"treasure_room" : TreasureRoom(player),
-			"death" : Death(player)
+			"death_scene" : Death(player)
 		}
 		# try:
 		return scenes.get(string)
