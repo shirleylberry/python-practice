@@ -27,17 +27,27 @@ class Player(object):
 		self.inventory = inventory
 
 
-
 class Map(object):
-	scenes = {
-		"hallway" : Hallway(),
-		"barracks" : Barracks(),
-		"armory" : Armory(),
-		"diningroom" : DiningRoom(),
-		"bedroom" : Bedroom(),
-		"treasure_room" : TreasureRoom(),
-		"death" : Death()
-	}
+	def __init__(self, start_scene, end_scene, player):
+		self.start_scene = start_scene
+		self.end_scene = end_scene
+		self.player = player
+
+	def get_scene(self, player, string):
+		scenes = {
+			"hallway" : Hallway(player),
+			"barracks" : Barracks(player),
+			"armory" : Armory(player),
+			"diningroom" : DiningRoom(player),
+			"bedroom" : Bedroom(player),
+			"treasure_room" : TreasureRoom(player),
+			"death" : Death(player)
+		}
+		# try:
+		return scenes.get(string)
+		# except:
+		print "That scene doesn't exist."
+			# exit()
 
 	castle_map = """
 	--------------------
@@ -51,20 +61,17 @@ class Map(object):
 	       |  H  |
 	"""
 
-	def __init__(self, start_scene, end_scene):
-		self.start_scene = start_scene
-		self.end_scene = end_scene
 
 	def get_next_scene(self, room_name):
-		next = self.scenes.get(room_name)
+		next = self.get_scene(player, room_name)
 		return next
 
 	def get_start_scene(self):
-		start = self.scenes.get(self.start_scene)
+		start = self.get_scene(player, self.start_scene)
 		return start
 
 	def get_end_scene(self):
-		end = self.scenes.get(self.end_scene)
+		end = self.get_scene(player, self.end_scene)
 		return end
 
 
@@ -81,16 +88,28 @@ class Engine(object):
 		end_scene = self.game_map.get_end_scene()
 
 		while current_scene != end_scene:
-			current_scene.enter(self.player)
+			current_scene.enter()
 			next_scene_name = current_scene.get_next_room()
 			current_scene = self.game_map.get_next_scene(next_scene_name)
 		current_scene.enter()
 
 
-my_map = Map("hallway", "treasure_room")
-name = input("Enter your name.")
+print "Enter your name."
+name = raw_input("> ")
 inventory = []
 player = Player(name, inventory)
+
+print "Greetings %s" %player.name
+print "You find yourself standing at the start of a winding road leading to a castle."
+print "You heard from an old man in a tavern that there's treasure inside."
+print "He gave you a map that lays out the interior of the castle, including the treasure room."
+print "Type inventory at any time to see your inventory, or map to see the map."
+print "Old men generally tend to be trustworthy in these sorts of stories."
+print "You decide to walk up the road.  As you approach the castle"
+print "the doors swing open on their own.  Not creepy at all..."
+print "You hesitantly walk inside."
+
+my_map = Map("hallway", "treasure_room", player)
 gm_engine = Engine(my_map, player)
 gm_engine.play()
 

@@ -1,4 +1,6 @@
 class Armory(object):
+	def __init__(self, player):
+		self.player = player
 
 	castle_map = """
 	--------------------
@@ -6,19 +8,43 @@ class Armory(object):
 	| X |         |    |
 	|-  ------------  --
 	|         |        |
-	|  K      |        |
-	|             T    |
+	|  BR     |   DR   |
+	|             t    |
 	--------     -------
 	       |  H  |
 	"""
 
-	def enter():
+	def enter(self):
+		print "You are carrying " + str(self.player.inventory)
 		print "You enter the armory, barely believing your luck."
-		print "I guess it wasn't worth it to haul a sword all the way from town."
+		print "I guess it wasn't worth it to haul a sword all the way from town after all!"
 		print "You see a sword and a shield hanging on one wall."
 		print "On another is a polearm."
 		print "There are daggers scattered about the room as well."
-		self.get_next_room()
-	def get_next_room():
+
+	def get_next_room(self):
 		print "What do you want to do?"
-		choice = input(">")
+		choice = raw_input(">")
+		if "dagger" in choice:
+			print "You grab a pair of daggers and tuck them into your belt."
+			self.player.inventory.append("daggers")
+			print "You then head back to the bedroom."
+			return "bedroom"
+
+		elif "sword" in choice or "shield" in choice:
+			print "You grab the sword and shield off the wall."
+			self.player.inventory.append("sword")
+			self.player.inventory.append("shield")
+			print "You then head back to the bedroom."
+			return "bedroom"
+
+		elif "polearm" in choice:
+			print "You grab the polearm off the wall."
+			print "Bold choice.  Do you even know what a polearm is?"
+			self.player.inventory.append("polearm")
+			print "You then head back to the bedroom."
+			return "bedroom"
+		else:
+			print "huh?"
+			return "armory"
+

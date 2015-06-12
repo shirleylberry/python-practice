@@ -1,4 +1,6 @@
 class TreasureRoom(object):
+	def __init__(self, player):
+		self.player = player
 
 	castle_map = """
 	--------------------
@@ -12,7 +14,8 @@ class TreasureRoom(object):
 	       |  H  |
 	"""
 
-	def enter():
+	def enter(self):
+		print "You are carrying " + str(self.player.inventory)
 		pass
-	def get_next_room():
+	def get_next_room(self):
 		pass
