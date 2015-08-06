@@ -9,6 +9,7 @@ def assert_response(resp, contains = None, matches = None, headers = None, statu
 
     if contains:
         assert contains in resp.data, "Response does not contain %r" %contains
+        print resp.data
 
     if matches:
         reg = re.compile(matches)

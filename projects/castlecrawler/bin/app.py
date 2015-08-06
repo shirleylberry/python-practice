@@ -15,12 +15,13 @@ class Index(object):
 
 class HelloForm(object):
     def GET(self):
-        return render.hello_form()
+        greeting = "Hello nobody"
+        return render.hello_form(greeting)
     def POST(self):
-        form = web.input(greet = "Hello", name = "Nobody")
+        form = web.input(greet = "Hello", name = "nobody")
         greeting = "%s %s" %(form.greet, form.name)
         if form.greet:
-            return render.hello_form()
+            return render.hello_form(greeting)
 
 
 if __name__ == "__main__":
