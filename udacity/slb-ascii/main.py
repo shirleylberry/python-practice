@@ -48,33 +48,51 @@ class MainHandler(Handler):
 
 class Post(db.Model):
     subject = db.StringProperty(required = True)
-    content = db.TextProperty(requred = True)
+    content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
 
 class BlogHandler(Handler):
     def render_blog(self, subject = "", content = "", error = "", posts = ""):
-        arts = db.GqlQuery("SELECT * FROM Art ORDER BY created DESC")
+        posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC")
 
         self.render("blog.html", subject = subject, content = content, error = error, posts = posts)
 
     def get(self):
-        self.render_front()
+        self.render_blog()
+
+class PostHandler(Handler):
+    def render_post(self, subject = "", content = ""):
+        self.render("post.html", subject = subject, content=content)
+
+    def get(self, post_id):
+        post = Post.get_by_id(int(post_id))
+        self.render("post.html", subject=post.subject, content=post.content)
+
+class NewPostHandler(Handler):
+    def render_new(self, subject="", content="", error=""):
+        self.render("new_post.html", subject = subject, content = content, error = error)
+
+    def get(self):
+        self.render_new()
 
     def post(self):
         subject = self.request.get("subject")
         content = self.request.get("content")
 
         if subject and content:
-            a = Art(subject = subject, content = content)
+            a = Post(subject = subject, content = content)
             a.put()
-
-            self.redirect("/")
+            id = a.key().id()
+            self.redirect("/blog/%s" %str(id))
         else:
-            error = "we need both a title and some artwork."
+            error = "we need both a subject and some content."
             self.render_front(subject, content, error)
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/blog', BlogHandler),
+    ('/blog/newpost', NewPostHandler),
+    (r'/blog/(\d+)', PostHandler),
 ], debug=True)
