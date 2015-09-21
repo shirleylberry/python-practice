@@ -13,7 +13,7 @@ config = {
 	"version’:" : "0.0.1",
 	"install_requires" : ["nose"],
 	"scripts" : [],
-	"name" : "castleweb",
+	"name" : "castleontheweb",
 }
 
 setup(**config)

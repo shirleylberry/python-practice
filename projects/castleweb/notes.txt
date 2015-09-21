@@ -1,0 +1,12 @@
+Next Steps:
+- add a way for people to login (maybe using google oauth)
+- add the player class
+- add the player's inventory
+- expand the map
+- add combat(?)
+
+
+
+currently working on:
+- getting the player's name to show up on pages
+- getting show_room to work

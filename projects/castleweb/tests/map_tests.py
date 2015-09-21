@@ -1,5 +1,5 @@
 from nose.tools import *
-from castleweb.map import *
+from castleontheweb.map import *
 
 # castle_map = """
 # --------------------
