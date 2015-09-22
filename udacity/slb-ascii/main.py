@@ -67,7 +67,8 @@ class PostHandler(Handler):
 
     def get(self, post_id):
         post = Post.get_by_id(int(post_id))
-        self.render("post.html", subject=post.subject, content=post.content)
+        if post:
+            self.render("post.html", subject=post.subject, content=post.content)
 
 class NewPostHandler(Handler):
     def render_new(self, subject="", content="", error=""):
@@ -83,8 +84,8 @@ class NewPostHandler(Handler):
         if subject and content:
             a = Post(subject = subject, content = content)
             a.put()
-            id = a.key().id()
-            self.redirect("/blog/%s" %str(id))
+            post_id = a.key().id()
+            self.redirect("/blog/%s" %str(post_id))
         else:
             error = "we need both a subject and some content."
             self.render_front(subject, content, error)
