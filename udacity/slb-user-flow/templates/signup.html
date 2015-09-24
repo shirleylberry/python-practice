@@ -1,0 +1,20 @@
+
+<form method = "post">
+    Complete this form to sign up.
+    <br>
+    <label> Username
+        <input type = "text" name = "username" value = "%(username)s">
+    </label>
+    <label> Password
+        <input type = "password" name = "password">
+    </label>
+    <label> Verify Password
+        <input type = "password" name = "verify">
+    </label>
+    <label> Email
+        <input type = "text" name = "email" value = "%(email)s">
+    </label>
+    <input type = "submit">
+    <br>
+    <div style = "color: red">%(error)s</div>
+</form>
