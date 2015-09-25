@@ -1,9 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Signup</title>
+</head>
+
+<body>
+
 
 <form method = "post">
     Complete this form to sign up.
     <br>
     <label> Username
-        <input type = "text" name = "username" value = "%(username)s">
+        <input type = "text" name = "username" value = {{username}}>
     </label>
     <label> Password
         <input type = "password" name = "password">
@@ -12,9 +21,10 @@
         <input type = "password" name = "verify">
     </label>
     <label> Email
-        <input type = "text" name = "email" value = "%(email)s">
+        <input type = "text" name = "email" value = {{email}}>
     </label>
     <input type = "submit">
     <br>
-    <div style = "color: red">%(error)s</div>
+    <div style = "color: red">{{error}}</div>
 </form>
+</body>
