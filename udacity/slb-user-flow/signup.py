@@ -8,6 +8,9 @@ import random
 
 import jinja2
 
+from google.appengine.ext import db
+
+from validate_user import verify_email, verify_password, verify_username
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
@@ -21,11 +24,15 @@ def hash_str(s):
 def make_secure_val(s):
     return "%s|%s" %(s, hash_str(s))
 
-def check_secure_val(h):
-    val = h.split('|')[0]
-    if h == make_secure_val(val):
+def check_secure_val(secure_val):
+    val = secure_val.split('|')[0]
+    if secure_val == make_secure_val(val):
         return val
 
+class User(db.Model):
+    username = db.StringProperty(required = True)
+    pw_hash = db.StringProperty(required = True)
+    email = db.StringProperty(required = False)
 
 
 class Handler(webapp2.RequestHandler):
@@ -43,17 +50,13 @@ class SignUpHandler(Handler):
     def render_new(self, username="", email="", error=""):
         self.render("signup.html", username = username, email = email, error = error)
 
-    def verify_username(self, username):
-        username_re = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
-        return username_re.match(username)
+    def check_exists(self, username):
+        # users = db.GqlQuery("SELECT * FROM User WHERE user.username=username")
+        # if users:
+        #     return True
+        # else:
+        #     return None
 
-    def verify_password(self, password):
-        password_re = re.compile(r"^.{3,20}$")
-        return password_re.match(password)
-
-    def verify_email(self, email):
-        email_re = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
-        return email_re.match(email)
 
     def get(self):
         self.render_new()
@@ -64,14 +67,20 @@ class SignUpHandler(Handler):
         password = self.request.get('password')
         verify = self.request.get('verify')
         email = self.request.get('email')
-        v_username = self.verify_username(username)
-        v_password = self.verify_password(password)
-        v_email = self.verify_email(email)
+        v_username = verify_username(username)
+        v_password = verify_password(password)
+        v_email = verify_email(email)
         if password != verify:
-            error = "The two passwords don't match.  Please try again."
-            self.render_new(username, email, error)
+            error = "The two passwords do not match.  Please try again."
+            self.render_new(username=username, email=email, error=error)
         elif v_username and v_password and v_email:
             cookie_val = make_secure_val(username)
+            if self.check_exists(username):
+                error = "User already exists."
+                self.render_new(username, email, error)
+            else:
+                u = User(username = username, pw_hash = cookie_val, email = email)
+                u.put()
             self.response.headers.add_header('Set-Cookie', 'username=%s;path=/' %str(cookie_val))
             self.redirect("/welcome")
         elif not v_username:
@@ -89,10 +98,11 @@ class SignUpThanksHandler(Handler):
         self.render("welcome.html", username = username)
 
     def get(self):
-        username = self.request.cookies.get('username')
-        if username:
-            name = make_secure_val(username)
-            if check_secure_val(name):
+        user_cookie = self.request.cookies.get('username')
+        username = user_cookie.split('|')[0]
+        if user_cookie:
+            valid_check = check_secure_val(user_cookie)
+            if username == valid_check:
                 self.render_new(username=username)
             else:
                 self.redirect("/signup")
